@@ -6586,7 +6586,6 @@ OPENVINO_TEST(${BACKEND_NAME}, onnx_model_mish_activation) {
                                           0.208001f,  2.986535f,  7.691896f,  0.453058f,  -0.000074f, 0.0f});
 
     test_case.run_with_tolerance_as_fp(0.000001f);
-
 }
 
 OPENVINO_TEST(${BACKEND_NAME}, onnx_model_reduce_min_18) {
