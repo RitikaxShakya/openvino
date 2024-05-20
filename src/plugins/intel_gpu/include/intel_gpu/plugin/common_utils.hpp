@@ -73,6 +73,9 @@ inline ov::element::Type convert_to_supported_device_type(ov::element::Type et) 
     }
 }
 
+bool is_supported(ov::element::Type_t et);
+bool data_types_are_supported(const ov::Node* node);
+
 using PrecisionMap = std::map<ov::element::Type_t, ov::element::Type>;
 
 std::vector<cldnn::optional_data_type> get_output_data_types(const ov::Node* op, PrecisionMap precision_map = {});
@@ -106,17 +109,6 @@ inline ov::Shape predict_shape(const std::string& name, const cldnn::layout layo
     }
 
     return layout.get_shape();
-}
-
-/// WA: Force exit. Any opencl api call can be hang after CL_OUT_OF_RESOURCES.
-inline void ForceExit() {
-    std::cerr << "[GPU] force exit.\n"
-              << "\tDue to the driver bug any subsequent OpenCL API call will cause application hang, "
-              << "so GPU plugin can't finish correctly.\n"
-              << "\tPlease try to update the driver or reduce memory consumption "
-              << "(use smaller batch size, less streams, lower precision, etc)"
-              << "to avoid CL_OUT_OF_RESOURCES exception" << std::endl;
-    std::_Exit(-1);
 }
 
 void convert_and_copy(const ov::ITensor* src, cldnn::memory::ptr dst, cldnn::stream& stream);
