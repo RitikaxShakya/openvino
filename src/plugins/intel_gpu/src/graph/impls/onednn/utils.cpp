@@ -94,6 +94,12 @@ dnnl::memory::dims flatten_tensor(cldnn::tensor t) {
     return {static_cast<int64_t>(t.count())};
 }
 
+dnnl::memory::dims get_strides(dnnl::memory::dims dims) {
+    dnnl::memory::dims strides(dims.size(), dnnl::memory::dim(1));
+    std::partial_sum(dims.rbegin(), dims.rend() - 1, strides.rbegin() + 1, std::multiplies<dnnl::memory::dim>());
+    return strides;
+}
+
 dnnl::memory::data_type convert_data_type(cldnn::data_types dt) {
     switch (dt) {
         case cldnn::data_types::f32: return dnnl::memory::data_type::f32;
@@ -138,6 +144,7 @@ std::vector<std::pair<cldnn::format, dnnl::memory::format_tag>> format_map = {
         { cldnn::format::g_os_is_zyx_isv16_osv16,  dnnl::memory::format_tag::gIOdhw16i16o },
 
         { cldnn::format::bfyx,  dnnl::memory::format_tag::nchw },
+        { cldnn::format::bfxy,  dnnl::memory::format_tag::abdc },
         { cldnn::format::byxf,  dnnl::memory::format_tag::nhwc },
         { cldnn::format::byfx,  dnnl::memory::format_tag::acbd },
         { cldnn::format::bxfy,  dnnl::memory::format_tag::adbc },
